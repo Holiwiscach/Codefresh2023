@@ -1,0 +1,24 @@
+version: '1.0'
+steps:
+  build:
+    title: Build
+    type: build
+    image_name: my-app
+    working_directory: ./my-app
+    dockerfile: Dockerfile
+
+  push:
+    title: Push
+    type: push
+    candidate: ${{build}}
+
+  deploy:
+    title: Deploy
+    type: composition
+    composition:
+      version: '3'
+      services:
+        my-app:
+          image: ${{push}}
+          ports:
+            - '80:80'
